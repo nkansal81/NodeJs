@@ -1,0 +1,4 @@
+
+start mongo db service  ---- sudo service mongod start
+
+kill port no - npx kill-port 8080

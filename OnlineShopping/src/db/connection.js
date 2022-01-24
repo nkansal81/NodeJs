@@ -1,4 +1,4 @@
-const { constants } = require("../config");
+const {constants} = require("../config"); 
 const mongoose = require("mongoose");
 
 const connectToMongoDb = () => {

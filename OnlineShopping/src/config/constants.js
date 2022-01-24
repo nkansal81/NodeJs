@@ -1,5 +1,5 @@
-// const dotenv = require('dotenv');
-// const error = dotenv.config();
+const dotenv = require('dotenv');
+const error = dotenv.config();
 // if(error){
 //     throw new Error(error.message);
 // }

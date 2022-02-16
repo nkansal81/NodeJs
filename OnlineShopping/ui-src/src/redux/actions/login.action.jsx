@@ -1,9 +1,7 @@
 import url from "../../api";
 
-const fetchRegister = async (payload) => {
-//   let headers = {};
-//   headers.Authorization = `Bearer ${token}`;
-  return await fetch(url.register, {
+const fetchLogin = async (payload) => {
+  return await fetch(url.login, {
     method: "POST",
     headers: {
         'Content-Type':'application/json'
@@ -19,4 +17,4 @@ const fetchRegister = async (payload) => {
     .catch((err) => console.log(err));
 };
 
-export default fetchRegister;
+export default fetchLogin;

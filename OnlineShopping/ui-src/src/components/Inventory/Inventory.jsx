@@ -1,6 +1,5 @@
 
 import * as React from 'react';
-import inventory from '../../redux/actions/inventory.action';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,20 +10,45 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { makeStyles } from "@material-ui/core/styles";
 import { flexbox } from '@mui/system';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useCallback } from 'react';
 import { useParams } from 'react-router';
+import { allProductSelector } from '../../redux/selector/inventory.selector';
+import { fetchInventoryDataAction } from '../../redux/actions/inventory.action';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Inventory = () => {
   const classes = useStyles();
-  const [data,setData] = useState([]);
+  const dispatch = useDispatch();
   const {token} = useParams();
+  const [isLoading,setIsLoading] = useState(true);
+  const productData = useSelector(allProductSelector);
 
-  useEffect(async() => {
-    const response = inventory(token);
-    response.then((data) => {
-      setData(data);
-    })
+  const getProductList = () => {
+    const list = localStorage.getItem('lists');
+    if(list){
+      return JSON.parse(list);
+    } else {
+      return [];
+    }
+  }
+
+  const [tableData,setTableData] = useState(getProductList());
+
+  useEffect(() => {
+    getProductData(); 
   },[]);
+
+  const getProductData = useCallback(() => {
+    dispatch(fetchInventoryDataAction(token)); 
+  },[dispatch]);
+
+  useEffect(()=>{
+    localStorage.setItem('lists',JSON.stringify(tableData));
+  },[tableData])
+
+  useEffect(()=>{
+    setTableData(productData);
+  })
 
   return(
     <Paper sx={{ wnameth: '100%'}} className={classes.root}>
@@ -37,7 +61,7 @@ const Inventory = () => {
           <TableBody>
             <TableRow>
              <div className={classes.table}>
-              {data.map((product,index) => {
+              {tableData.map((product,index) => {
                 return( 
                   <TableRow className={classes.row} key={index}>
                     <TableCell className={classes.leftSide}>

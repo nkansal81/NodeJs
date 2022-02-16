@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Checkbox,
   Grid,
@@ -8,6 +8,8 @@ import {
   Button
 } from '@material-ui/core';
 import { makeStyles } from "@material-ui/core/styles";
+import fetchLogin from '../../redux/actions/login.action';
+import {Link,useNavigate} from 'react-router-dom';
 
 const useStyles = makeStyles(()=>({
   palette: {
@@ -44,10 +46,31 @@ const useStyles = makeStyles(()=>({
 
 const LoginPage = () => {
   const classes = useStyles();
+  let navigate = useNavigate();
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
   const [checked, setChecked] = React.useState(true);
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
+  const handleUsername = (e) => {
+    setEmail(e.target.value);
+  }
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  }
+  const handleChange = (e) => {
+    setChecked(e.target.checked);
   };
+  const handleLogin = async(e) => {
+    e.preventDefault();
+    const payload = {
+      email: email,
+      password: password,
+    }
+    const {token} = await fetchLogin(payload);
+    if(token){
+      localStorage.setItem('token',JSON.stringify(token));
+      navigate(`/inventory/${token}`);    
+    }
+  }
 
   return (
     <Paper style={{ padding: 30 }}>
@@ -59,10 +82,21 @@ const LoginPage = () => {
         alignItems={'center'}
       >
         <Grid item xs={12}>
-          <TextField label="Username"></TextField>
+          <TextField 
+            label="Email"
+            onChange={handleUsername}
+            value = {email}
+          >
+          </TextField>
         </Grid>
         <Grid item xs={12}>
-          <TextField label="Password" type={'password'}></TextField>
+          <TextField 
+            label="Password" 
+            type={'password'}
+            onChange = {handlePassword}
+            value ={password}
+            >
+          </TextField>
         </Grid>
         <Grid item xs={12}>
           <FormControlLabel
@@ -78,7 +112,11 @@ const LoginPage = () => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button fullWidth> Login </Button>
+          <Button 
+            fullWidth
+            onClick={handleLogin}
+          >
+            Login </Button>
         </Grid>
       </Grid>
     </Paper>

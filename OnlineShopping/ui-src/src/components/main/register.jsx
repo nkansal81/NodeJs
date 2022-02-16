@@ -4,7 +4,6 @@ import { Button } from '@mui/material';
 import fetchRegister from "../../redux/actions/register.action";
 import {Link,useNavigate} from 'react-router-dom';
 
-
 const Register = () => {
   const classes = useStyles();
   const [username,setUsername] = useState("");
@@ -30,10 +29,11 @@ const Register = () => {
     }
     const {token} = await fetchRegister(payload);
     if(token){
-      // navigate(`/inventory/:${token}`,{ state:{
+      // navigate(`/inventory/${token}`,{ state:{
       //   token:token
       // }});
-      navigate(`/inventory/${token}`);
+      localStorage.setItem('registerToken',JSON.stringify(token));
+      navigate(`/login`);
     }
   }
 
